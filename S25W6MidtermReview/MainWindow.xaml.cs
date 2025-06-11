@@ -16,11 +16,15 @@ namespace S25W6MidtermReview
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Employee _emp;
+        private List<Employee> _employees;
+
         public MainWindow()
         {
             InitializeComponent();
 
             rdoHourly.IsChecked = true;
+            _employees = new List<Employee>();
         }
 
         private void rdoHourly_Checked(object sender, RoutedEventArgs e)
@@ -45,6 +49,33 @@ namespace S25W6MidtermReview
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void btnCalculate_Click(object sender, RoutedEventArgs e)
+        {
+            string name = txtName.Text;
+
+            if (rdoHourly.IsChecked == true)
+            {
+                int hours = int.Parse(txtInput2.Text);
+                double wage = double.Parse(txtInput3.Text);
+
+                _emp = new HourlyEmployee(name, hours, wage);
+            }
+            else
+            {
+                double grossSales = double.Parse(txtInput2.Text);
+                double commissionRate = double.Parse(txtInput3.Text) / 100;
+
+                _emp = new CommissionEmployee(name, grossSales, commissionRate);
+            }
+
+            txtGrossEarnings.Text = _emp.GrossEarnings().ToString("C");
+            txtTax.Text = _emp.Tax().ToString("C");
+            txtNetEarnings.Text = _emp.NetEarnings().ToString("C");
+
+            _employees.Add(_emp);
+            lstEmployees.Items.Add(name);
         }
     }
 }
